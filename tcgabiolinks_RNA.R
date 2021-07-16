@@ -13,18 +13,18 @@ gdc_query_download_prepare <- function(PROJECT, DATA_CAT, DATA_TYPE, FILE_TYPE, 
   ##if OUT_DIR does not exist, create it
   dir.create(paste0(proj, "/data"), recursive = TRUE, showWarnings = FALSE)
 
-  qry <- GDCquery(project = PROJECT,
-                  data.category = DATA_CAT,
-                  data.type = DATA_TYPE,
-                  file.type = FILE_TYPE,
-                  legacy = LEGACY)
+  qry <- TCGAbiolinks::GDCquery(project = PROJECT,
+                                data.category = DATA_CAT,
+                                data.type = DATA_TYPE,
+                                file.type = FILE_TYPE,
+                                legacy = LEGACY)
 
-  GDCdownload(qry,
-              directory = paste0(proj, "/data"),
-              method = "api",
-              files.per.chunk = 50)
+  TCGAbiolinks::GDCdownload(qry,
+                            directory = paste0(proj, "/data"),
+                            method = "api",
+                            files.per.chunk = 50)
 
-  out_data <- GDCprepare(qry, directory = paste0(proj, "/data"))
+  out_data <- TCGAbiolinks::GDCprepare(qry, directory = paste0(proj, "/data"))
   
   ##tell function to send output as 'out_data'
   return(out_data)
