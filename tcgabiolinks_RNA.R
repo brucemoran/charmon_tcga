@@ -38,7 +38,7 @@ lapply(list, function(f){
                                          FILE_TYPE = "FPKM.txt.gz",
                                          LEGACY = FALSE)
   
-  proj <- gsub("-", "_", PROJECT)
+  proj <- gsub("-", "_", f)
   
   ##make tibbles
   ##fpkms
