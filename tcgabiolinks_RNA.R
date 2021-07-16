@@ -42,8 +42,8 @@ lapply(list, function(f){
   
   ##make tibbles
   ##fpkms
-  tcga_rna_fpkm_tb <- tibble::as_tibble(assays(tcga_rna)$`HTSeq - FPKM`, rownames = "ensembl_gene_id") %>%
-    dplyr::mutate(across(is.numeric, round, 3))
+  tcga_rna_fpkm_tb <- tibble::as_tibble(SummarizedExperiment::assays(tcga_rna)$`HTSeq - FPKM`, rownames = "ensembl_gene_id") %>%
+    dplyr::mutate(across(where(is.numeric), round, 3))
   
   ##biomart
   mart <- biomaRt::useMart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
@@ -57,12 +57,12 @@ lapply(list, function(f){
   
   ##log2fpkms
   tcga_rna_log2fpkm_bm_tb <- tcga_rna_fpkm_bm_tb %>%
-    dplyr::mutate(across(is.numeric, ~ .x + 0.0001)) %>%
+    dplyr::mutate(across(where(is.numeric), ~ .x + 0.0001)) %>%
     dplyr::mutate(across(is.numeric, log2)) %>%
     dplyr::mutate(across(is.numeric, round, 3))
   
   ##clinical
-  tcga_rna_clin <- tibble::as_tibble(colData(tcga_rna))
+  tcga_rna_clin <- tibble::as_tibble(SummarizedExperiment::colData(tcga_rna))
   
   tcga_list <- list(tcga_rna, tcga_rna_fpkm_bm_tb, tcga_rna_log2fpkm_bm_tb, tcga_rna_clin)
   list_stubs <- c("tcga_rna", "tcga_rna_fpkm_bm_tb", "tcga_rna_log2fpkm_bm_tb", "tcga_rna_clin")
