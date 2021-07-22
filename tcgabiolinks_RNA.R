@@ -58,8 +58,8 @@ lapply(list, function(f){
   ##log2fpkms
   tcga_rna_log2fpkm_bm_tb <- tcga_rna_fpkm_bm_tb %>%
     dplyr::mutate(across(where(is.numeric), ~ .x + 0.0001)) %>%
-    dplyr::mutate(across(is.numeric, log2)) %>%
-    dplyr::mutate(across(is.numeric, round, 3))
+    dplyr::mutate(across(where(is.numeric), log2)) %>%
+    dplyr::mutate(across(where(is.numeric), round, 3))
   
   ##clinical
   tcga_rna_clin <- tibble::as_tibble(SummarizedExperiment::colData(tcga_rna))

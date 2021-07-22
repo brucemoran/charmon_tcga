@@ -1,0 +1,176 @@
+---
+title: "C. Harmon TCGA Survival"
+author: "BM"
+date: "7/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(devtools)
+devtools::install_github("https://github.com/DonaghEgan/rpartSurvivalClassifier", force = TRUE, ref = "dev")
+#detach('package:rpartSurvivalClassifier', unload = TRUE)
+library(rpartSurvivalClassifier)
+library(readxl)
+
+##download clinical survival data
+url <- "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6066282/bin/NIHMS978596-supplement-1.xlsx"
+temps <- tempfile("./tmp.xlsx")
+utils::download.file(url, temps)
+tcga_surv_tb <- readxl::read_xlsx(temps, sheet = "TCGA-CDR") %>%
+                dplyr::rename(patient = "bcr_patient_barcode")
+```
+
+## C. Harmon TCGA Survival TRDV1, 2, 3
+
+This is an analysis of public TCGA expression (RNAseq) data in BRCA, COAD, LUAD, OV and UCEC using TRDV1, TRDV2 and TRDV3. 
+
+We use univariate and multivariate approaches, and stratify the patient cohorts based on median and {rpart} methods.
+
+Data was downloaded and curated using the `tcgabiolinks_RNA.R` script available from [our Github repo] [https://github.com/brucemoran/charmon_tcga]
+
+Data are in `./TCGA_*` directories in the same dir. Output is saved to those dirs in the `./TCGA_*/survival` directories.
+
+```{r rpartSurvivalClassifier, echo = FALSE, message = FALSE, warning = FALSE}
+PROJECT_LIST <- dir(pattern = "TCGA")
+
+##run per project, i.e. TCGA disease type
+project_output_list <- lapply(PROJECT_LIST, function(proj){
+  
+  print(paste0("Working on: ", proj))
+  
+  ##create output dir, load RDS data, create expr_df
+  dir.create(paste0(proj, "/output/plots/rpart"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(paste0(proj, "/output/plots/median"), recursive = TRUE, showWarnings = FALSE)
+  proj_list <- readRDS(file.path(proj, "data", paste0(proj, ".list.RDS")))
+  expr_tb <- proj_list[[3]]
+  clin_df <- proj_list[[4]]
+  surv_clin_tb <- tcga_surv_tb %>% dplyr::filter(type %in% gsub("TCGA_", "", proj)) %>%
+                                   dplyr::left_join(., clin_df, by = "patient")
+   
+    ################
+   ## run rpart ##
+  ##############
+  
+  ##find ensembl_gene_id for known gene names and parse from expr_tb
+  TRDVs <- unlist(lapply(c("TRDV1", "TRDV2", "TRDV3"), function(f){
+    expr_tb[grep(f, unlist(expr_tb[,"external_gene_name"])),1]
+  }))
+  names(TRDVs) <- c("TRDV1", "TRDV2", "TRDV3")
+  expr_df <- expr_tb %>% dplyr::select(-external_gene_name) %>%
+                          dplyr::filter(ensembl_gene_id %in% TRDVs) %>%
+                          t() %>%
+                          tibble::as_tibble(., rownames = "barcode")
+  colnames(expr_df) <- expr_df[1,]
+  expr_df <- expr_df[-1,]
+  colnames(expr_df)[1] <- "barcode"
+  expr_df[,2:dim(expr_df)[2]] <- lapply(expr_df[,2:dim(expr_df)[2]], as.numeric)
+  
+  ##survival using DSS, PFI
+  surv_out_list <- lapply(c("DSS", "PFI"), function(survs){
+    print(paste0("Running rpart on: ", survs))
+    surv_rpart_tb <- rpartSurvivalClassifier::run_rpart(expr_df = expr_df, 
+                                                        gene_ids = TRDVs, 
+                                                        clin_df = surv_clin_tb, 
+                                                        surv_event = survs, 
+                                                        surv_time = paste0(survs, ".time"), 
+                                                        join_el = "barcode",
+                                                        title_text = proj)
+    if(!is.null(surv_rpart_tb)){
+      print(paste0("Running rpart survival on: ", survs))
+      surv_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = surv_rpart_tb[[1]], 
+                                                              gene_ids = TRDVs, 
+                                                              surv_event = survs, 
+                                                              surv_time = paste0(survs, ".time"),
+                                                              title_text = proj,
+                                                              sub_text = "rpart stratification")
+      
+      #plot outputs from rpart splits
+      lapply(surv_rpart_tb, function(p){
+    
+        rpart_plots_list <- surv_rpart_tb[[2]][!sapply(surv_rpart_tb[[2]], is.null)]
+        pdf(paste0(proj, "/output/plots/rpart/rpart_", proj, "_", survs, ".pdf"))  
+        lapply(rpart_plots_list, function(pp){
+          pp()
+        })
+        dev.off()
+         lapply(rpart_plots_list, function(pp){
+          pp()
+        })
+      })
+      
+      #plot outputs from rpart survival
+      surv_plots_list <- lapply(surv_lrt_list, function(p){
+        p[[1]]
+      })
+      
+      lapply(seq_along(surv_plots_list), function(pp){
+          print(pp)
+          if(class(surv_plots_list[[pp]]) %in% "ggsurvplot"){
+            surv_plots_list[[pp]]
+            ggplot2::ggsave(filename = paste0(proj, "/output/plots/rpart/survminer_", proj, "_", names(surv_plots_list)[pp], ".", survs, ".pdf"))
+          }
+        })
+      return(list(surv_rpart_tb, surv_lrt_list))
+
+    } else {
+      print("Genes not found!")
+    }
+  })
+  
+  ##save generated data
+  save_file <- paste0(paste0(proj, "/output/"), proj, ".output_list.RDS")
+  saveRDS(surv_out_list, file = save_file)
+  return(surv_out_list)
+  
+    #####################
+   ## median survival ##
+  ####################
+  
+  ##function
+  med_func <- function(df){
+    as_tibble(lapply(df, function(vec){
+      if(is.numeric(vec[1])){
+        medv <- median(vec)
+        ifelv <- ifelse(vec > medv, "High", "Low")
+        return(ifelv)
+      } else {
+        return(vec)
+      }
+    }
+    ))
+  }
+  surv_median_tb <- med_func(expr_df)
+  
+  ##rename columns to fit rpartSurvivalClassifier schema
+  names(surv_median_tb)[2:4] <- paste0(names(expr_df)[2:4], "_group")
+  print(paste0("Running median survival on: ", survs))
+  surv_clin_median_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
+  
+  ##run survival                           
+  surv_mlrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = surv_clin_median_tb, 
+                                                          gene_ids = TRDVs, 
+                                                          surv_event = survs, 
+                                                          surv_time = paste0(survs, ".time"),
+                                                          title_text = proj,
+                                                          sub_text = "Median stratification")
+  
+  surv_mplots_list <- lapply(surv_mlrt_list, function(p){
+        p[[1]]
+      })
+      
+  lapply(seq_along(surv_mplots_list), function(pp){
+      print(pp)
+      if(class(surv_mplots_list[[pp]]) %in% "ggsurvplot"){
+        surv_mplots_list[[pp]]
+        ggplot2::ggsave(filename = paste0(proj, "/output/plots/median/survminer_", proj, "_", names(surv_mplots_list)[pp], ".", survs, ".pdf"))
+      }
+  })
+  return(list(surv_rpart_tb, surv_lrt_list, surv_clin_median_tb, surv_mlrt_list))
+})
+
+names(project_output_list) <- PROJECT_LIST
+save_file <- paste0("survival_RNA.output_list.RDS")
+saveRDS(project_output_list, file = save_file)
+```
