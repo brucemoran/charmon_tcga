@@ -74,7 +74,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       
       ##write output to CSV
       det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
-      readr::write_csv(det, paste0(proj, "/output/", proj, "rpart_surv_tb.csv"))
+      readr::write_csv(det, paste0(proj, "/output/", proj, ".rpart_surv_tb.csv"))
       
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
