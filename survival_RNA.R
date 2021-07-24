@@ -70,7 +70,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         join_el = "barcode",
                                                         title_text = proj)
     
-    readr::write_csv(rpart_surv_tb, file = paste0(proj, "/output/", paste0(proj, ".", surv, ".rpart_surv_tb.csv")))
+    readr::write_csv(rpart_surv_tb, file = paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
     
     if(!is.null(rpart_surv_tb)){
       print(paste0("Running rpart survival on: ", surv))
@@ -147,7 +147,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   
   ##join with clinical survival data
   median_surv_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
-  readr::write_csv(median_surv_tb, file = paste0(proj, "/output/", paste0(proj, ".", surv, ".median_surv_tb.csv")))
+  readr::write_csv(median_surv_tb, file = paste0(proj, "/output/", proj, ".", surv, ".median_surv_tb.csv"))
   
   median_out_list <- lapply(surv_vec, function(surv){
     print(paste0("Running median survival on: ", surv))
