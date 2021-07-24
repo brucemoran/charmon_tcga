@@ -164,8 +164,8 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
     lapply(seq_along(median_surv_plots_list), function(pp){
       if(class(median_surv_plots_list[[pp]]) %in% "ggsurvplot"){
         median_surv_plots_list[[pp]]
-        ggplot2::ggsave(filename = paste0(proj, "/output/median/survminer_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
-        ggplot2::ggsave(filename = paste0("plots/median/survminer_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
+        ggplot2::ggsave(filename = paste0(proj, "/output/median/median_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
+        ggplot2::ggsave(filename = paste0("plots/median/median_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
       }
     })
     return(list(median_surv_tb = median_surv_tb, 

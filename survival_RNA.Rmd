@@ -1,7 +1,7 @@
-```{r survivalPlots, echo = FALSE, message = FALSE, warning = FALSE}
+```{r survivalPlots, message = FALSE, warning = FALSE}
 ##load data
+library(tidyverse)
 out_list <- readRDS("survival_RNA.output_list.RDS")
-names(out_list[[1]])
 
 #plot outputs from rpart survival
 lapply(names(out_list), function(proj){
@@ -13,7 +13,7 @@ lapply(names(out_list), function(proj){
   
   ##apply over surv
   surv_vec <- c("DSS", "PFI")
-  lapply(surv_vec, function(surv){
+  plots_list <- lapply(surv_vec, function(surv){
     for(x in seq_along(grep("not", rpart_out_list[[surv]]$rpart_surv_plots_list, invert = TRUE))){
       rpart_out_list[[surv]][["rpart_surv_plots_list"]][[x]]
     }
@@ -21,5 +21,6 @@ lapply(names(out_list), function(proj){
       median_out_list[[surv]][["median_surv_plots_list"]]
     }
   })
+  return(plots_list)
 })
-
+```
