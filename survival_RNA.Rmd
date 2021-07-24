@@ -4,7 +4,7 @@ library(tidyverse)
 out_list <- readRDS("survival_RNA.output_list.RDS")
 
 #plot outputs from rpart survival
-lapply(names(out_list), function(proj){
+plot_list <- lapply(names(out_list), function(proj){
   
   ##get project data for rpart, median
   proj_out_list <- out_list[[proj]]
@@ -23,4 +23,5 @@ lapply(names(out_list), function(proj){
   })
   return(plots_list)
 })
+plot_list
 ```
