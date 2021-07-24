@@ -70,6 +70,8 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         join_el = "barcode",
                                                         title_text = proj)
     
+    readr::write_csv(rpart_surv_tb, file = paste0(proj, "/output/", paste0(proj, ".", surv, ".rpart_surv_tb.csv")))
+    
     if(!is.null(rpart_surv_tb)){
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
@@ -145,6 +147,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   
   ##join with clinical survival data
   median_surv_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
+  readr::write_csv(median_surv_tb, file = paste0(proj, "/output/", paste0(proj, ".", surv, ".median_surv_tb.csv")))
   
   median_out_list <- lapply(surv_vec, function(surv){
     print(paste0("Running median survival on: ", surv))
@@ -189,4 +192,11 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
 names(project_output_list) <- PROJECT_LIST
 save_file <- paste0("survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
+
+##write rmarkdown HTMLs
+rmarkdown::render("./plots/rmds/TCGA_BRCA.Rmd", output = "plots/htmls/TCGA_BRCA.html")
+rmarkdown::render("./plots/rmds/TCGA_COAD.Rmd", output = "plots/htmls/TCGA_COAD.html")
+rmarkdown::render("./plots/rmds/TCGA_LUAD.Rmd", output = "plots/htmls/TCGA_LUAD.html")
+rmarkdown::render("./plots/rmds/TCGA_OV.Rmd", output = "plots/htmls/TCGA_OV.html")
+rmarkdown::render("./plots/rmds/TCGA_UCEC.Rmd", output = "plots/htmls/TCGA_UCEC.html")
 
