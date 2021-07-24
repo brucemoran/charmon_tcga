@@ -70,7 +70,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         join_el = "barcode",
                                                         title_text = proj)
     
-    readr::write_csv(rpart_surv_tb, paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
+    readr::write_csv(rpart_surv_tb[[1]], paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
     
     if(!is.null(rpart_surv_tb)){
       print(paste0("Running rpart survival on: ", surv))
