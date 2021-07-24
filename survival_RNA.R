@@ -87,7 +87,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
         rpart_plots_list <- rpart_surv_tb[[2]][!sapply(rpart_surv_tb[[2]], is.null)]
         
         ##pdf outputs
-        pdf(paste0(proj, "/output/plots/rpart/rpart_", proj, "_", surv, ".pdf"))
+        pdf(paste0(proj, "/output/rpart/rpart_", proj, "_", surv, ".pdf"))
         pdf(paste0("plots/rpart/rpart_", proj, "_", surv, ".pdf"))  
         
         ##apply over list of plot functions
@@ -107,7 +107,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       lapply(seq_along(rpart_surv_plots_list), function(pp){
         if(class(rpart_surv_plots_list[[pp]]) %in% "ggsurvplot"){
           rpart_surv_plots_list[[pp]]
-          ggplot2::ggsave(filename = paste0(proj, "/output/plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
+          ggplot2::ggsave(filename = paste0(proj, "/output/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
           ggplot2::ggsave(filename = paste0("plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
           
         }
@@ -164,7 +164,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
     lapply(seq_along(median_surv_plots_list), function(pp){
       if(class(median_surv_plots_list[[pp]]) %in% "ggsurvplot"){
         median_surv_plots_list[[pp]]
-        ggplot2::ggsave(filename = paste0(proj, "/output/plots/median/survminer_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
+        ggplot2::ggsave(filename = paste0(proj, "/output/median/survminer_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
         ggplot2::ggsave(filename = paste0("plots/median/survminer_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
       }
     })
@@ -189,3 +189,4 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
 names(project_output_list) <- PROJECT_LIST
 save_file <- paste0("survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
+
