@@ -70,10 +70,12 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         join_el = "barcode",
                                                         title_text = proj)
     
-    det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
-    readr::write_csv(det, paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
-    
     if(!is.null(rpart_surv_tb)){
+      
+      ##write output to CSV
+      det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
+      readr::write_csv(det, paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
+      
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
                                                                gene_ids = TRDVs, 
