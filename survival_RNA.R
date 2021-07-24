@@ -74,7 +74,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       
       ##write output to CSV
       det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
-      readr::write_csv(det, paste0(proj, "/output/", proj, ".", surv, ".rpart_surv_tb.csv"))
+      readr::write_csv(det, paste0(proj, "/output/", proj, "rpart_surv_tb.csv"))
       
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
@@ -151,7 +151,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   ##join with clinical survival data
   median_surv_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
   det <- dplyr::select(.data = median_surv_tb, -where(is.list))
-  readr::write_csv(det, paste0(proj, "/output/", proj, ".", surv, ".median_surv_tb.csv"))
+  readr::write_csv(det, paste0(proj, "/output/", proj, ".median_surv_tb.csv"))
   
   median_out_list <- lapply(surv_vec, function(surv){
     print(paste0("Running median survival on: ", surv))
