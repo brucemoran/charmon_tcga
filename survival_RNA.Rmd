@@ -4,7 +4,7 @@ library(tidyverse)
 out_list <- readRDS("survival_RNA.output_list.RDS")
 
 #plot outputs from rpart survival
-plot_list <- lapply(names(out_list), function(proj){
+lapply(names(out_list), function(proj){
   
   ##get project data for rpart, median
   proj_out_list <- out_list[[proj]]
@@ -13,15 +13,13 @@ plot_list <- lapply(names(out_list), function(proj){
   
   ##apply over surv
   surv_vec <- c("DSS", "PFI")
-  plots_list <- lapply(surv_vec, function(surv){
+  lapply(surv_vec, function(surv){
     for(x in seq_along(grep("not", rpart_out_list[[surv]]$rpart_surv_plots_list, invert = TRUE))){
-      rpart_out_list[[surv]][["rpart_surv_plots_list"]][[x]]
+      print(rpart_out_list[[surv]][["rpart_surv_plots_list"]][[x]])
     }
     for(x in seq_along(grep("not", median_out_list[[surv]]$median_surv_plots_list, invert = TRUE))){
-      median_out_list[[surv]][["median_surv_plots_list"]]
+      print(median_out_list[[surv]][["median_surv_plots_list"]][[x]])
     }
   })
-  return(plots_list)
 })
-plot_list
 ```
