@@ -198,9 +198,9 @@ save_file <- paste0("survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
 
 ##write rmarkdown HTMLs
-rmarkdown::render("./plots/rmds/TCGA_BRCA.Rmd", output = "plots/htmls/TCGA_BRCA.html")
-rmarkdown::render("./plots/rmds/TCGA_COAD.Rmd", output = "plots/htmls/TCGA_COAD.html")
-rmarkdown::render("./plots/rmds/TCGA_LUAD.Rmd", output = "plots/htmls/TCGA_LUAD.html")
-rmarkdown::render("./plots/rmds/TCGA_OV.Rmd", output = "plots/htmls/TCGA_OV.html")
-rmarkdown::render("./plots/rmds/TCGA_UCEC.Rmd", output = "plots/htmls/TCGA_UCEC.html")
+rmarkdown::render("./plots/rmds/TCGA_BRCA.Rmd", output_file = "plots/htmls/TCGA_BRCA.html")
+rmarkdown::render("./plots/rmds/TCGA_COAD.Rmd", output_file = "plots/htmls/TCGA_COAD.html")
+rmarkdown::render("./plots/rmds/TCGA_LUAD.Rmd", output_file = "plots/htmls/TCGA_LUAD.html")
+rmarkdown::render("./plots/rmds/TCGA_OV.Rmd", output_file = "plots/htmls/TCGA_OV.html")
+rmarkdown::render("./plots/rmds/TCGA_UCEC.Rmd", output_file = "plots/htmls/TCGA_UCEC.html")
 
