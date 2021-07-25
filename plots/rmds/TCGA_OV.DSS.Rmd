@@ -7,7 +7,7 @@ output: rmarkdown::github_document
 
 ```{r survivalPlots, echo = FALSE, message = FALSE, warning = FALSE}
 ##load data
-out_list <- readRDS("survival_RNA.output_list.RDS")
+out_list <- readRDS("../../survival_RNA.output_list.RDS")
 
 #plot outputs from rpart survival
 
