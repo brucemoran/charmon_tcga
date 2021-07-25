@@ -2,7 +2,7 @@
 title: "TCGA-LUAD"
 author: "BM"
 date: "7/24/2021"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r survivalPlots, echo = FALSE, message = FALSE, warning = FALSE}
