@@ -3,5 +3,6 @@
 .RData
 .Ruserdata
 TCGA_*
+!TCGA_*.html
 MANIFEST.txt
 *RDS
