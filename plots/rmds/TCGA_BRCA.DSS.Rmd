@@ -2,7 +2,7 @@
 title: "TCGA-BRCA DSS"
 author: "BM"
 date: "7/24/2021"
-output: rmarkdown::github_document
+output: github_document
 ---
 
 ```{r survivalPlots, echo = FALSE, message = FALSE, warning = FALSE}
