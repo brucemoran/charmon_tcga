@@ -25,7 +25,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       dir.create(paste(di, dii, sep = "/"), recursive = TRUE, showWarnings = FALSE)
     })
   })
-  lapply(c("rpart", "median"), function(di){
+  lapply(c("rpart", "median", "htmls"), function(di){
     dir.create(paste("plots", di, sep = "/"), recursive = TRUE, showWarnings = FALSE)
   })
   proj_list <- readRDS(file.path(proj, "data", paste0(proj, ".list.RDS")))
@@ -198,9 +198,9 @@ save_file <- paste0("survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
 
 ##write rmarkdown HTMLs
-rmarkdown::render("./plots/rmds/TCGA_BRCA.Rmd", output_file = "plots/htmls/TCGA_BRCA.html")
-rmarkdown::render("./plots/rmds/TCGA_COAD.Rmd", output_file = "plots/htmls/TCGA_COAD.html")
-rmarkdown::render("./plots/rmds/TCGA_LUAD.Rmd", output_file = "plots/htmls/TCGA_LUAD.html")
-rmarkdown::render("./plots/rmds/TCGA_OV.Rmd", output_file = "plots/htmls/TCGA_OV.html")
-rmarkdown::render("./plots/rmds/TCGA_UCEC.Rmd", output_file = "plots/htmls/TCGA_UCEC.html")
+rmarkdown::render("html_TCGA_BRCA.Rmd", output_file = "plots/htmls/TCGA_BRCA.html")
+rmarkdown::render("html_TCGA_COAD.Rmd", output_file = "plots/htmls/TCGA_COAD.html")
+rmarkdown::render("html_TCGA_LUAD.Rmd", output_file = "plots/htmls/TCGA_LUAD.html")
+rmarkdown::render("html_TCGA_OV.Rmd", output_file = "plots/htmls/TCGA_OV.html")
+rmarkdown::render("html_TCGA_UCEC.Rmd", output_file = "plots/htmls/TCGA_UCEC.html")
 
