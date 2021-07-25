@@ -198,10 +198,10 @@ save_file <- paste0("survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
 
 ##write rmarkdown HTMLs
-rmarkdown::render("plots/rmds/TCGA_BRCA.DSS.Rmd", output_file = "../../plots/htmls/TCGA_BRCA.DSS.html")
-rmarkdown::render("plots/rmds/TCGA_BRCA.PFI.Rmd", output_file = "../../plots/htmls/TCGA_BRCA.PFI.html")
-rmarkdown::render("plots/rmds/TCGA_COAD.Rmd", output_file = "../../plots/htmls/TCGA_COAD.html")
-rmarkdown::render("plots/rmds/TCGA_LUAD.Rmd", output_file = "../../plots/htmls/TCGA_LUAD.html")
-rmarkdown::render("plots/rmds/TCGA_OV.Rmd", output_file = "../../plots/htmls/TCGA_OV.html")
-rmarkdown::render("plots/rmds/TCGA_UCEC.Rmd", output_file = "../../plots/htmls/TCGA_UCEC.html")
+rmarkdown::render("plots/rmds/TCGA_BRCA.DSS.Rmd", output_file = "../htmls/TCGA_BRCA.DSS.html")
+rmarkdown::render("plots/rmds/TCGA_BRCA.PFI.Rmd", output_file = "../htmls/TCGA_BRCA.PFI.html")
+rmarkdown::render("plots/rmds/TCGA_COAD.Rmd", output_file = "../htmls/TCGA_COAD.html")
+rmarkdown::render("plots/rmds/TCGA_LUAD.Rmd", output_file = "../htmls/TCGA_LUAD.html")
+rmarkdown::render("plots/rmds/TCGA_OV.Rmd", output_file = "../htmls/TCGA_OV.html")
+rmarkdown::render("plots/rmds/TCGA_UCEC.Rmd", output_file = "../htmls/TCGA_UCEC.html")
 
