@@ -1,7 +1,7 @@
 library(tidyverse)
 library(devtools)
 devtools::install_github("https://github.com/DonaghEgan/rpartSurvivalClassifier", force = TRUE, ref = "dev")
-#detach('package:rpartSurvivalClassifier', unload = TRUE)
+detach('package:rpartSurvivalClassifier', unload = TRUE)
 library(rpartSurvivalClassifier)
 library(readxl)
 
@@ -107,7 +107,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       
       ##again apply over plot list
       lapply(seq_along(rpart_surv_plots_list), function(pp){
-        if(class(rpart_surv_plots_list[[pp]]) %in% "ggsurvplot"){
+        if(class(rpart_surv_plots_list[[pp]])[1] %in% "ggsurvplot"){
           rpart_surv_plots_list[[pp]]
           ggplot2::ggsave(filename = paste0(proj, "/output/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
           ggplot2::ggsave(filename = paste0("plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
