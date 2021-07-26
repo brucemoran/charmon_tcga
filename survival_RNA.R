@@ -1,7 +1,7 @@
 library(tidyverse)
 library(devtools)
 devtools::install_github("https://github.com/DonaghEgan/rpartSurvivalClassifier", force = TRUE, ref = "dev")
-detach('package:rpartSurvivalClassifier', unload = TRUE)
+#detach('package:rpartSurvivalClassifier', unload = TRUE)
 library(rpartSurvivalClassifier)
 library(readxl)
 
