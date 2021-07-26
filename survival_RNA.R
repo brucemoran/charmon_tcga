@@ -70,7 +70,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         join_el = "barcode",
                                                         title_text = proj)
     
-    if(!is.null(rpart_surv_tb)){
+    if(!is.null(rpart_surv_tb$rpart_tb)){
       
       ##write output to CSV
       det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
@@ -78,7 +78,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
-                                                               gene_ids = TRDVs, 
+                                                               gene_ids = TRDVs,
                                                                group_name = "_rpart_group",
                                                                surv_event = surv, 
                                                                surv_time = paste0(surv, ".time"),
@@ -86,22 +86,19 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                                sub_text = "rpart stratification")
       
       #plot outputs from rpart splits
-      lapply(rpart_surv_tb, function(p){
-        
-        ##remove NULL
-        rpart_plots_list <- rpart_surv_tb[[2]][!sapply(rpart_surv_tb[[2]], is.null)]
-        
-        ##pdf outputs
-        pdf(paste0(proj, "/output/rpart/rpart_", proj, "_", surv, ".pdf"))
-        pdf(paste0("plots/rpart/rpart_", proj, "_", surv, ".pdf"))  
-        
-        ##apply over list of plot functions
-        lapply(rpart_plots_list, function(pp){
-          pp()
-        })
-        dev.off()
-        dev.off()
+      ##remove NULL
+      rpart_plots_list <- rpart_surv_tb[["rpart_split_plot_list"]][!sapply(rpart_surv_tb[["rpart_split_plot_list"]], is.null)]
+      
+      ##pdf outputs
+      pdf(paste0(proj, "/output/rpart/rpart_", proj, "_", surv, ".pdf"))
+      pdf(paste0("plots/rpart/rpart_", proj, "_", surv, ".pdf"))  
+      
+      ##apply over list of plot functions
+      lapply(rpart_plots_list, function(pp){
+        pp()
       })
+      dev.off()
+      dev.off()
       
       #plot outputs from rpart survival
       rpart_surv_plots_list <- lapply(rpart_lrt_list, function(p){
@@ -200,8 +197,12 @@ saveRDS(project_output_list, file = save_file)
 ##write rmarkdown HTMLs
 rmarkdown::render("plots/rmds/TCGA_BRCA.DSS.Rmd", output_file = "../mds/TCGA_BRCA.DSS.md")
 rmarkdown::render("plots/rmds/TCGA_BRCA.PFI.Rmd", output_file = "../mds/TCGA_BRCA.PFI.md")
-rmarkdown::render("plots/rmds/TCGA_COAD.Rmd", output_file = "../mds/TCGA_COAD.md")
-rmarkdown::render("plots/rmds/TCGA_LUAD.Rmd", output_file = "../mds/TCGA_LUAD.md")
-rmarkdown::render("plots/rmds/TCGA_OV.Rmd", output_file = "../mds/TCGA_OV.md")
-rmarkdown::render("plots/rmds/TCGA_UCEC.Rmd", output_file = "../mds/TCGA_UCEC.md")
+rmarkdown::render("plots/rmds/TCGA_COAD.DSS.Rmd", output_file = "../mds/TCGA_COAD.DSS.md")
+rmarkdown::render("plots/rmds/TCGA_COAD.PFI.Rmd", output_file = "../mds/TCGA_COAD.PFI.md")
+rmarkdown::render("plots/rmds/TCGA_LUAD.DSS.Rmd", output_file = "../mds/TCGA_LUAD.DSS.md")
+rmarkdown::render("plots/rmds/TCGA_LUAD.PFI.Rmd", output_file = "../mds/TCGA_LUAD.PFI.md")
+rmarkdown::render("plots/rmds/TCGA_OV.DSS.Rmd", output_file = "../mds/TCGA_OV.DSS.md")
+rmarkdown::render("plots/rmds/TCGA_OV.PFI.Rmd", output_file = "../mds/TCGA_OV.PFI.md")
+rmarkdown::render("plots/rmds/TCGA_UCEC.DSS.Rmd", output_file = "../mds/TCGA_UCEC.DSS.md")
+rmarkdown::render("plots/rmds/TCGA_UCEC.PFI.Rmd", output_file = "../mds/TCGA_UCEC.PFI.md")
 
