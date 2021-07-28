@@ -94,8 +94,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
         pp()
       })
       dev.off()
-      dev.off()
-      
+
       #plot outputs from rpart survival
       rpart_surv_plots_list <- lapply(rpart_lrt_list, function(p){
         p[[1]]
