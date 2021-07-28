@@ -1,0 +1,29 @@
+---
+title: "TCGA-OV DSS"
+author: "BM"
+date: "7/24/2021"
+output: github_document
+---
+
+```{r survivalPlots, echo = FALSE, message = FALSE, warning = FALSE}
+##load data
+out_list <- readRDS("../../output/RDS/survival_RNA.output_list.RDS")
+
+#plot outputs from rpart survival
+
+##get project data for rpart, median
+proj_out_list <- out_list[["TCGA_OV"]]
+rpart_out_list <- proj_out_list[["rpart_out_list"]]
+median_out_list <- proj_out_list[["median_out_list"]]
+
+##apply over surv
+surv_vec <- c("DSS")
+lapply(surv_vec, function(surv){
+  for(x in seq_along(grep("not", rpart_out_list[[surv]]$rpart_surv_plots_list, invert = TRUE))){
+    print(rpart_out_list[[surv]][["rpart_surv_plots_list"]][[x]])
+  }
+  for(x in seq_along(grep("not", median_out_list[[surv]]$median_surv_plots_list, invert = TRUE))){
+    print(median_out_list[[surv]][["median_surv_plots_list"]][[x]])
+  }
+})
+```
