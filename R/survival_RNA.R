@@ -104,7 +104,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       lapply(seq_along(rpart_surv_plots_list), function(pp){
         if(class(rpart_surv_plots_list[[pp]])[1] %in% "ggsurvplot"){
           rpart_surv_plots_list[[pp]]
-          ggplot2::ggsave(filename = paste0("../output/plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
+          ggplot2::ggsave(filename = paste0("output/plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
         }
       })
       return(list(rpart_surv_tb = rpart_surv_tb, 
