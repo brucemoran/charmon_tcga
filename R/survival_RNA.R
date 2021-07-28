@@ -179,7 +179,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   
   ##save generated data
   print("Saving and returning data...")
-  save_file <- paste0("output/RDS", proj, ".output_list.RDS")
+  save_file <- paste0("output/RDS/", proj, ".output_list.RDS")
   saveRDS(list(rpart_out_list = rpart_out_list, 
                median_out_list = median_out_list), 
           file = save_file)
