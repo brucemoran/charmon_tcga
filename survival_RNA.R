@@ -143,6 +143,12 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       }
     })))
   }
+  
+  ##rename colnames(expr_df)
+  if(!is.null(names(TRDVs))){
+    colnames(expr_df)[colnames(expr_df) %in% TRDVs] <- paste(TRDVs, names(TRDVs), sep = "_")
+  }
+  
   surv_median_tb <- med_func(expr_df)
   
   ##join with clinical survival data
