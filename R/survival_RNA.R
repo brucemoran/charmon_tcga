@@ -20,10 +20,10 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   print(paste0("Working on: ", proj))
   
   ##create output dir, load RDS data, create expr_df
-  dir.create("../output/csv", recursive = TRUE, showWarnings = FALSE)
-  dir.create("../output/RDS", recursive = TRUE, showWarnings = FALSE)
+  dir.create("output/csv", recursive = TRUE, showWarnings = FALSE)
+  dir.create("output/RDS", recursive = TRUE, showWarnings = FALSE)
   lapply(c("rpart", "median", "mds"), function(dii){
-    dir.create(paste("../output/plots/", dii, sep = "/"), recursive = TRUE, showWarnings = FALSE)
+    dir.create(paste("output/plots/", dii, sep = "/"), recursive = TRUE, showWarnings = FALSE)
   })
 
   proj_list <- readRDS(file.path(proj, "data", paste0(proj, ".list.RDS")))
@@ -71,7 +71,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       
       ##write output to CSV
       det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
-      readr::write_csv(det, paste0("../output/csv/", proj, ".rpart_surv_tb.csv"))
+      readr::write_csv(det, paste0("output/csv/", proj, ".rpart_surv_tb.csv"))
       
       print(paste0("Running rpart survival on: ", surv))
       rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
@@ -87,7 +87,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
       rpart_plots_list <- rpart_surv_tb[["rpart_split_plot_list"]][!sapply(rpart_surv_tb[["rpart_split_plot_list"]], is.null)]
       
       ##pdf outputs
-      pdf(paste0("../output/plots/rpart/rpart_", proj, "_", surv, ".pdf"))
+      pdf(paste0("output/plots/rpart/rpart_", proj, "_", surv, ".pdf"))
 
       ##apply over list of plot functions
       lapply(rpart_plots_list, function(pp){
@@ -147,7 +147,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   ##join with clinical survival data
   median_surv_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
   det <- dplyr::select(.data = median_surv_tb, -where(is.list))
-  readr::write_csv(det, paste0("../output/csv/", proj, ".median_surv_tb.csv"))
+  readr::write_csv(det, paste0("output/csv/", proj, ".median_surv_tb.csv"))
   
   median_out_list <- lapply(surv_vec, function(surv){
     print(paste0("Running median survival on: ", surv))
@@ -167,7 +167,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
     lapply(seq_along(median_surv_plots_list), function(pp){
       if(class(median_surv_plots_list[[pp]]) %in% "ggsurvplot"){
         median_surv_plots_list[[pp]]
-        ggplot2::ggsave(filename = paste0("../output/plots/median/median_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
+        ggplot2::ggsave(filename = paste0("output/plots/median/median_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
       }
     })
     return(list(median_surv_tb = median_surv_tb, 
@@ -179,7 +179,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   
   ##save generated data
   print("Saving and returning data...")
-  save_file <- paste0("../output/RDS", proj, ".output_list.RDS")
+  save_file <- paste0("output/RDS", proj, ".output_list.RDS")
   saveRDS(list(rpart_out_list = rpart_out_list, 
                median_out_list = median_out_list), 
           file = save_file)
@@ -189,5 +189,5 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
 })
 
 names(project_output_list) <- PROJECT_LIST
-save_file <- paste0("../output/RDS/survival_RNA.output_list.RDS")
+save_file <- paste0("output/RDS/survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
