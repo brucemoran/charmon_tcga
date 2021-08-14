@@ -18,11 +18,12 @@ PROJECT_LIST <- dir(pattern = "TCGA")
 project_output_list <- lapply(PROJECT_LIST, function(proj){
   
   print(paste0("Working on: ", proj))
+  projo <- gsub("_", "-", proj)
   
   ##create output dir, load RDS data, create expr_df
   dir.create("output/csv", recursive = TRUE, showWarnings = FALSE)
   dir.create("output/RDS", recursive = TRUE, showWarnings = FALSE)
-  lapply(c("rpart", "median", "mds"), function(dii){
+  lapply(paste0(projo, c("/png", "/pdf")), function(dii){
     dir.create(paste("output/plots/", dii, sep = "/"), recursive = TRUE, showWarnings = FALSE)
   })
 
@@ -65,51 +66,31 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                         surv_event = surv, 
                                                         surv_time = paste0(surv, ".time"), 
                                                         join_el = "barcode",
-                                                        title_text = proj)
+                                                        title_text = projo,
+                                                        print_pdf = paste0("output/plots/", projo, "/pdf"),
+                                                        print_png = paste0("output/plots/", projo, "/png"),
+                                                        plot_prefix = "rpart")
     
-    if(!is.null(rpart_surv_tb$rpart_tb)){
+    if(!is.null(rpart_surv_tb)){
       
       ##write output to CSV
-      det <- dplyr::select(.data = rpart_surv_tb[[1]], -where(is.list))
-      readr::write_csv(det, paste0("output/csv/", proj, ".rpart_surv_tb.csv"))
+      det <- dplyr::select(.data = rpart_surv_tb, -where(is.list))
+      readr::write_csv(det, paste0("output/csv/", projo, ".rpart_surv_tb.csv"))
       
       print(paste0("Running rpart survival on: ", surv))
-      rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb[[1]], 
+      rpart_lrt_list <- rpartSurvivalClassifier::run_surv_plot(clin_tb = rpart_surv_tb, 
                                                                gene_ids = TRDVs,
                                                                group_name = "_rpart_group",
                                                                surv_event = surv, 
                                                                surv_time = paste0(surv, ".time"),
-                                                               title_text = proj,
-                                                               sub_text = "rpart stratification")
+                                                               title_text = projo,
+                                                               sub_text = "rpart stratification",
+                                                               print_pdf = paste0("output/plots/", projo, "/pdf"),
+                                                               print_png = paste0("output/plots/", projo, "/png"),
+                                                               plot_prefix = "rpart")
       
-      #plot outputs from rpart splits
-      ##remove NULL
-      rpart_plots_list <- rpart_surv_tb[["rpart_split_plot_list"]][!sapply(rpart_surv_tb[["rpart_split_plot_list"]], is.null)]
-      
-      ##pdf outputs
-      pdf(paste0("output/plots/rpart/rpart_", proj, "_", surv, ".pdf"))
-
-      ##apply over list of plot functions
-      lapply(rpart_plots_list, function(pp){
-        pp()
-      })
-      dev.off()
-
-      #plot outputs from rpart survival
-      rpart_surv_plots_list <- lapply(rpart_lrt_list, function(p){
-        p[[1]]
-      })
-      
-      ##again apply over plot list
-      lapply(seq_along(rpart_surv_plots_list), function(pp){
-        if(class(rpart_surv_plots_list[[pp]])[1] %in% "ggsurvplot"){
-          rpart_surv_plots_list[[pp]]
-          ggplot2::ggsave(filename = paste0("output/plots/rpart/rpart_", proj, "_", names(rpart_surv_plots_list)[pp], ".", surv, ".pdf"))
-        }
-      })
       return(list(rpart_surv_tb = rpart_surv_tb, 
-                  rpart_lrt_list = rpart_lrt_list, 
-                  rpart_surv_plots_list = rpart_surv_plots_list))
+                  rpart_lrt_list = rpart_lrt_list))
     }
   })
   
@@ -147,7 +128,7 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
   ##join with clinical survival data
   median_surv_tb <- dplyr::left_join(surv_median_tb, surv_clin_tb)
   det <- dplyr::select(.data = median_surv_tb, -where(is.list))
-  readr::write_csv(det, paste0("output/csv/", proj, ".median_surv_tb.csv"))
+  readr::write_csv(det, paste0("output/csv/", projo, ".median_surv_tb.csv"))
   
   median_out_list <- lapply(surv_vec, function(surv){
     print(paste0("Running median survival on: ", surv))
@@ -158,28 +139,21 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                               group_name = "_median_group",
                                                               surv_event = surv, 
                                                               surv_time = paste0(surv, ".time"),
-                                                              title_text = proj,
-                                                              sub_text = "Median stratification")
+                                                              title_text = projo,
+                                                              sub_text = "Median stratification",
+                                                              print_pdf = paste0("output/plots/", projo, "/pdf"),
+                                                              print_png = paste0("output/plots/", projo, "/png"),
+                                                              plot_prefix = "median")
     
-    median_surv_plots_list <- lapply(median_lrt_list, function(p){
-      p[[1]]
-    })
-    lapply(seq_along(median_surv_plots_list), function(pp){
-      if(class(median_surv_plots_list[[pp]]) %in% "ggsurvplot"){
-        median_surv_plots_list[[pp]]
-        ggplot2::ggsave(filename = paste0("output/plots/median/median_", proj, "_", names(median_surv_plots_list)[pp], ".", surv, ".pdf"))
-      }
-    })
     return(list(median_surv_tb = median_surv_tb, 
-                median_lrt_list = median_lrt_list, 
-                median_surv_plots_list = median_surv_plots_list))
+                median_lrt_list = median_lrt_list))
   })
   
   names(median_out_list) <- surv_vec
   
   ##save generated data
   print("Saving and returning data...")
-  save_file <- paste0("output/RDS/", proj, ".output_list.RDS")
+  save_file <- paste0("output/RDS/", projo, ".output_list.RDS")
   saveRDS(list(rpart_out_list = rpart_out_list, 
                median_out_list = median_out_list), 
           file = save_file)
@@ -191,3 +165,31 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
 names(project_output_list) <- PROJECT_LIST
 save_file <- paste0("output/RDS/survival_RNA.output_list.RDS")
 saveRDS(project_output_list, file = save_file)
+
+##make index.md
+png_line <- "![PNG not found](PNG_FILE)"
+pdf_line <- "[Download PDF](PDF_FILE)"
+tcgas <- dir("output/plots")
+md_text_vec <- c("# TCGA TRDV Survival Analysis", 
+                 "## stratification by {rpart} and median log2TPM expression")
+for(x in 1:length(tcgas)){
+  md_text_vec <- c(md_text_vec, c("```",  paste0("### ", tcgas[x]), "```"))
+  pngs <- paste0("output/plots/", tcgas[x], "/",
+                 dir(pattern = "png", 
+                     paste0("output/plots/", tcgas[x]), 
+                     recursive = TRUE))
+  pdfs <- gsub("png", "pdf", pngs)
+  for(xx in 1:length(pngs)){
+    md_text_vec <- c(md_text_vec, gsub("PNG_FILE", pngs[xx], png_line))
+    md_text_vec <- c(md_text_vec, gsub("PDF_FILE", pdfs[xx], pdf_line))
+  }
+}
+file_conn <- file("index.md")
+writeLines(paste(md_text_vec, collapse = "\n"), file_conn)
+close(file_conn)
+
+
+
+### TCGA-BRCA
+
+

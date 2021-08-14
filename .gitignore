@@ -3,8 +3,7 @@
 .RData
 .Ruserdata
 TCGA_*
-!TCGA_*.html
-!TCGA_*.Rmd
-!TCGA_*files
+!TCGA_*/png
+!TCGA_*/pdf
 MANIFEST.txt
 *RDS
