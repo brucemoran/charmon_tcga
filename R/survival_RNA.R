@@ -189,3 +189,5 @@ for(x in 1:length(tcgas)){
 file_conn <- file("index.md")
 writeLines(paste(md_text_vec, collapse = "\n"), file_conn)
 close(file_conn)
+
+system("zip -r all_plots.zip output/plots")
