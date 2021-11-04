@@ -1,7 +1,6 @@
 # TCGA TRDV Survival Analysis
 ## stratification by {rpart} and median log2TPM expression
 
-[Download TCGA PDFs](output/plots/TCGA-BRCA/pdf)
 ```
 ### TCGA-BRCA
 ```
