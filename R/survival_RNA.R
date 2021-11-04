@@ -190,4 +190,4 @@ file_conn <- file("index.md")
 writeLines(paste(md_text_vec, collapse = "\n"), file_conn)
 close(file_conn)
 
-system("zip -r all_plots.zip output/plots")
+system("zip -r output/plots/all_plots.zip output/plots/TCGA*")
