@@ -173,7 +173,8 @@ png_line <- "![PNG not found](PNG_FILE)"
 pdf_line <- "[Download PDF](PDF_FILE)"
 tcgas <- dir("output/plots")
 md_text_vec <- c("# TCGA TRDV Survival Analysis",
-                 "## stratification by {rpart} and median log2TPM expression")
+                 "## stratification by {rpart} and median log2TPM expression",
+                 "[Download zip of all plots](output/plots/all_plots.zip)")
 for(x in 1:length(tcgas)){
   md_text_vec <- c(md_text_vec, c("```",  paste0("### ", tcgas[x]), "```"))
   pngs <- paste0("output/plots/", tcgas[x], "/",
