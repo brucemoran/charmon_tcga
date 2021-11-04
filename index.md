@@ -1,6 +1,11 @@
 # TCGA TRDV Survival Analysis
 ## stratification by {rpart} and median log2TPM expression
-
+[Download zip of all plots](output/plots/all_plots.zip)
+```
+### all_plots.zip
+```
+![PNG not found](output/plots/all_plots.zip/)
+[Download PDF](output/plots/all_plots.zip/)
 ```
 ### TCGA-BRCA
 ```
@@ -132,4 +137,3 @@
 [Download PDF](output/plots/TCGA-UCEC/pdf/rpart.ggsurvplot_ENSG00000211804_TRDV1_PFI.pdf)
 ![PNG not found](output/plots/TCGA-UCEC/png/rpart.ggsurvplot_ENSG00000211821_TRDV2_PFI.png)
 [Download PDF](output/plots/TCGA-UCEC/pdf/rpart.ggsurvplot_ENSG00000211821_TRDV2_PFI.pdf)
->>>>>>> a398d707f546b5e490c4f2bf76e0ee3d5363f2e6
