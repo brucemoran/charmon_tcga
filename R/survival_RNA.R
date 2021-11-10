@@ -87,7 +87,8 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                                sub_text = "rpart stratification",
                                                                print_pdf = paste0("output/plots/", projo, "/pdf"),
                                                                print_png = paste0("output/plots/", projo, "/png"),
-                                                               plot_prefix = "rpart")
+                                                               plot_prefix = "rpart",
+                                                               plot_font_size = 21)
 
       return(list(rpart_surv_tb = rpart_surv_tb,
                   rpart_lrt_list = rpart_lrt_list))
@@ -143,7 +144,8 @@ project_output_list <- lapply(PROJECT_LIST, function(proj){
                                                               sub_text = "Median stratification",
                                                               print_pdf = paste0("output/plots/", projo, "/pdf"),
                                                               print_png = paste0("output/plots/", projo, "/png"),
-                                                              plot_prefix = "median")
+                                                              plot_prefix = "median",
+                                                              plot_font_size = 21)
 
     return(list(median_surv_tb = median_surv_tb,
                 median_lrt_list = median_lrt_list))

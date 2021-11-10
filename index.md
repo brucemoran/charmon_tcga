@@ -2,6 +2,11 @@
 ## stratification by {rpart} and median log2TPM expression
 [Download zip of all plots](output/plots/all_plots.zip)
 ```
+### all_plots.zip
+```
+![PNG not found](output/plots/all_plots.zip/)
+[Download PDF](output/plots/all_plots.zip/)
+```
 ### TCGA-BRCA
 ```
 ![PNG not found](output/plots/TCGA-BRCA/png/median.ggsurvplot_ENSG00000211804_TRDV1_DSS.png)
